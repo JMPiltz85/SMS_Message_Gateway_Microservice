@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.13.35825.156 d17.13
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMS_Message_Gateway_Microservice", "SMS_Message_Gateway_Microservice\SMS_Message_Gateway_Microservice.csproj", "{4E464CE8-8306-4C3E-A362-FF2A9D8B8075}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SMSMessageUnitTestProject", "TestProject1\SMSMessageUnitTestProject.csproj", "{411C1C17-EEB4-41D2-93FD-85D8584D1BE3}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E464CE8-8306-4C3E-A362-FF2A9D8B8075}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E464CE8-8306-4C3E-A362-FF2A9D8B8075}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E464CE8-8306-4C3E-A362-FF2A9D8B8075}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E464CE8-8306-4C3E-A362-FF2A9D8B8075}.Release|Any CPU.Build.0 = Release|Any CPU
+		{411C1C17-EEB4-41D2-93FD-85D8584D1BE3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{411C1C17-EEB4-41D2-93FD-85D8584D1BE3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{411C1C17-EEB4-41D2-93FD-85D8584D1BE3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{411C1C17-EEB4-41D2-93FD-85D8584D1BE3}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {72A0F049-CFF1-4481-BB16-95C0FC80AE58}
+	EndGlobalSection
+EndGlobal
