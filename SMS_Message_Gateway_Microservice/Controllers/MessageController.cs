@@ -43,11 +43,11 @@ namespace SMS_Service.Controllers
         [HttpPost("SendMessage")]
         public async Task<IActionResult> SendMessage([FromBody] Messages message)
         {
-            bool hasSent = false;
+            bool canSend = false;
             DateTime dateSent = DateTime.Now;
 
             //checks to see if phone number is empty
-            if(string.IsNullOrEmpty(message.PhoneNumber))
+            if(string.IsNullOrEmpty(message.SourcePhoneNumber))
             {
                 return BadRequest("Phone number required.");
             }
@@ -56,15 +56,17 @@ namespace SMS_Service.Controllers
             {
                 return BadRequest("Message Content is required.");
             }
-            
-            hasSent = await service.processMessage(message.PhoneNumber,dateSent , message.MessageContent);
 
-            if(!hasSent)
+            canSend = service.processMessage(message.SourcePhoneNumber, dateSent , message.MessageContent).Result;
+
+            if(!canSend)
             {
                 return BadRequest("Provider's limits on sending SMS messages has been reached. Try again when there is less messages being sent");    
             }
-            else{
-                await service.dequeueMessage();
+            else
+            {
+
+                service.dequeueMessage();
             }
 
 

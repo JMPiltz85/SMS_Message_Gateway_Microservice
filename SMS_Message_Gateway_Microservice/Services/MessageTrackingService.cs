@@ -2,6 +2,8 @@ using SMS_Service.Models;
 using System.Collections.Generic;
 using System.Linq;
 using System.Collections.Concurrent;
+using SMS_Message_Gateway_Microservice.Models;
+using Microsoft.Extensions.Options;
 
 namespace SMS_Service.Services
 {
@@ -24,6 +26,8 @@ namespace SMS_Service.Services
         private int maxCallAmtPhoneNum {get; set;}
         private int maxCallAmtAccount {get; set;}
 
+        private MaximumSettings? maxSettings;
+
         public MessageTrackingService(int maxPhoneCalls=0, int maxAccountCalls =0)
         {
             this.msgQueue = new ConcurrentQueue<Messages>();
@@ -31,7 +35,17 @@ namespace SMS_Service.Services
             this.maxCallAmtAccount = maxAccountCalls;
         }
 
-        
+        public MessageTrackingService(IOptions<MaximumSettings> _maxSettings)
+        {
+            this.msgQueue = new ConcurrentQueue<Messages>();
+
+            maxSettings = _maxSettings.Value;
+
+            this.maxCallAmtPhoneNum = maxSettings.MaximumPhoneNumberMessages;
+            this.maxCallAmtAccount = maxSettings.MaximumAccountMessages;
+        }
+
+
         //checks to see if the message can be sent. If so, it's added to the message list
         public async Task<bool> processMessage(string PhoneNumber, DateTime timeSent, string Message ="")
         {
@@ -47,7 +61,7 @@ namespace SMS_Service.Services
         //gets the current amount of records pertaining to the phone number
         public int getMessageRecordAmt(string phoneNumber)
         {
-            int amount = msgQueue.Where(m => m.PhoneNumber == phoneNumber).Count();
+            int amount = msgQueue.Where(m => m.SourcePhoneNumber == phoneNumber.Trim()).Count();
 
             return amount;
         }
@@ -55,7 +69,7 @@ namespace SMS_Service.Services
         //NOTE: Sees which messages are still in the message queue
         public List<Messages> getLogsByPhoneNum(string phoneNumber)
         {
-            return msgQueue.Where(m => m.PhoneNumber == phoneNumber).ToList();
+            return msgQueue.Where(m => m.SourcePhoneNumber == phoneNumber.Trim()).ToList();
         }
 
         public List<Messages> listActiveMessages()
@@ -69,14 +83,12 @@ namespace SMS_Service.Services
             Messages msg = new Messages();
             bool result = false;
 
-            //will keep attempting to dequeue message until it's successful.
-            while(!result)
-            {
+            
                 if(msgQueue.Count > 0)
                 {
                     result = msgQueue.TryDequeue(out msg);
                 }
-            }
+            
 
             return msg;
         }
@@ -85,11 +97,11 @@ namespace SMS_Service.Services
         protected bool canSendMessage(Messages log)
         {
             bool canSend = true;
-            int currentAmtPhoneNum = getMessageRecordAmt(log.PhoneNumber);
+            int currentAmtPhoneNum = getMessageRecordAmt(log.SourcePhoneNumber);
             int currentAmtAccount = msgQueue.Count();
 
             //NOTE: Kept maximum values in appsettings so can adjust values based on environment
-            if(!string.IsNullOrEmpty(log.PhoneNumber) && !string.IsNullOrEmpty(log.MessageContent)  && 
+            if(!string.IsNullOrEmpty(log.SourcePhoneNumber) && !string.IsNullOrEmpty(log.MessageContent)  && 
                     currentAmtPhoneNum <  maxCallAmtPhoneNum && currentAmtAccount < maxCallAmtAccount )
                 canSend = true;
             else

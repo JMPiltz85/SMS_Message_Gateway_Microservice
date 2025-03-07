@@ -1,3 +1,5 @@
+using SMS_Message_Gateway_Microservice.Models;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
@@ -8,6 +10,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // registers the "MessageTrackingService" service with the container
+builder.Services.Configure<MaximumSettings>(builder.Configuration.GetSection("MaximumValues")); // gets Maximum values from appsettings file
 builder.Services.AddScoped<SMS_Service.Services.IMessageTrackingService, SMS_Service.Services.MessageTrackingService>();
 builder.Services.AddControllers(); // addes controller services to the container
 
